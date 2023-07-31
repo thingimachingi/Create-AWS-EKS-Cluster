@@ -15,6 +15,8 @@ pipeline {
                 ]]) {
                     // AWS Code
                     sh "aws sts get-caller-identity"
+					sh "terraform init"
+					sh "terraform apply -auto-approve"
                 }
             }
         }
