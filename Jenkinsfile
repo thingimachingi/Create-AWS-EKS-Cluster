@@ -26,8 +26,11 @@ pipeline {
                     // AWS Code
                     sh "aws sts get-caller-identity"
 					
-					if (${env.DESTROY_EKS_CLUSTER} == 'Yes') {
-					    echo "Going to destroy EKS Cluster"
+					script {
+						if (${env.DESTROY_EKS_CLUSTER} == 'Yes') {
+							echo "Going to destroy EKS Cluster"
+							input 'Going to destroy EKS Cluster Really?'
+						}
 					}
 					
 					input 'Want to destroy the EKS cluster2?'
