@@ -17,7 +17,7 @@ pipeline {
                     sh "aws sts get-caller-identity"
 					input 'Want to destroy the EKS cluster?'
 					println 'input below'
-					println input
+					println $input
 					input 'Want to destroy the EKS cluster2?'
 					//TODO: execute the below two steps only if the cluster already does not exist
 					sh "terraform init"
