@@ -30,7 +30,7 @@ pipeline {
 					script {
 						if (env.DESTROY_EKS_CLUSTER == 'Yes') {
 							echo "Going to destroy EKS Cluster"
-							sh "terraform destroy"
+							sh "terraform destroy -auto-approve"
 						} else {
 							echo "Going to create EKS Cluster"
 							input 'Want to create the EKS Cluster?'
