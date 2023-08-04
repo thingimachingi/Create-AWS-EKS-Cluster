@@ -23,20 +23,25 @@ pipeline {
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
+				
                     // AWS Code
                     sh "aws sts get-caller-identity"
 					
 					script {
 						if (env.DESTROY_EKS_CLUSTER == 'Yes') {
 							echo "Going to destroy EKS Cluster"
+							sh "terraform destroy"
+						} else {
+							echo "Going to create EKS Cluster"
+							input 'Want to create the EKS Cluster?'
+							//TODO: execute the below two steps only if the cluster already does not exist
+							sh "terraform init"
+							sh "terraform apply -auto-approve"
+							//TODO: add verify cluster steps. refer to https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
 						}
 					}
 					
-					input 'Want to destroy the EKS cluster2?'
-					//TODO: execute the below two steps only if the cluster already does not exist
-					sh "terraform init"
-					sh "terraform apply -auto-approve"
-					//TODO: add verify cluster steps. refer to https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
+					
                 }
             }
         }
