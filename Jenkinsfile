@@ -1,4 +1,12 @@
 
+def userInput = input(id: 'userInput', message: 'some message', parameters: [
+    [$class: 'ChoiceParameterDefinition', choices: string, description: 'description1', name:'input1'],
+    [$class: 'ChoiceParameterDefinition', choices: string, description: 'description2', name:'input2'],
+    ])
+    VARAIBLE1 = userInput['input1']
+    VARAIBLE2 = userInput['input2']
+	
+	
 pipeline {    
     agent any
     
@@ -15,9 +23,9 @@ pipeline {
                 ]]) {
                     // AWS Code
                     sh "aws sts get-caller-identity"
-					input 'Want to destroy the EKS cluster?'
-					println 'input below'
-					println "${input}"
+					userInput
+					
+					
 					input 'Want to destroy the EKS cluster2?'
 					//TODO: execute the below two steps only if the cluster already does not exist
 					sh "terraform init"
