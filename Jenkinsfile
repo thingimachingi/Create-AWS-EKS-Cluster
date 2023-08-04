@@ -6,14 +6,20 @@ pipeline {
     
     stages {
         stage("Test") {
-		def userInput = input(id: 'userInput', message: 'some message', parameters: [
-			[$class: 'ChoiceParameterDefinition', choices: string, description: 'description1', name:'input1'],
-			[$class: 'ChoiceParameterDefinition', choices: string, description: 'description2', name:'input2'],
-			])
-    VARAIBLE1 = userInput['input1']
-    VARAIBLE2 = userInput['input2']
 
             steps {
+				script {
+				  env.USERNAME = input message: 'Please enter the username',
+									 parameters: [string(defaultValue: '',
+												  description: '',
+												  name: 'Username')]
+				  env.PASSWORD = input message: 'Please enter the password',
+									 parameters: [password(defaultValue: '',
+												  description: '',
+												  name: 'Password')]
+			}
+			echo "Username: ${env.USERNAME}"
+			echo "Password: ${env.PASSWORD}"
                 println (WORKSPACE)
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'ThingiMachingiGitHubCred', url: 'https://github.com/thingimachingi/Create-AWS-EKS-Cluster']])
                 withCredentials([[
