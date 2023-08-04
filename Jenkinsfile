@@ -15,8 +15,11 @@ pipeline {
                 ]]) {
                     // AWS Code
                     sh "aws sts get-caller-identity"
+					input 'Want to destroy the EKS cluster?'
+					//TODO: execute the below two steps only if the cluster already does not exist
 					sh "terraform init"
 					sh "terraform apply -auto-approve"
+					//TODO: add verify cluster steps. refer to https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
                 }
             }
         }
