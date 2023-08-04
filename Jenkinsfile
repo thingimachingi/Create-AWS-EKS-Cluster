@@ -9,17 +9,12 @@ pipeline {
 
             steps {
 				script {
-				  env.USERNAME = input message: 'Please enter the username',
-									 parameters: [string(defaultValue: '',
-												  description: '',
-												  name: 'Username')]
-				  env.PASSWORD = input message: 'Please enter the password',
-									 parameters: [password(defaultValue: '',
-												  description: '',
-												  name: 'Password')]
-			}
-			echo "Username: ${env.USERNAME}"
-			echo "Password: ${env.PASSWORD}"
+				  env.DESTROY_EKS_CLUSTER = input message: 'Want to destroy the EKS cluster',
+									 parameters: [string(defaultValue: 'No',
+												  description: 'Say Yes or No',
+												  name: 'DestroyEksCluster')]
+				}
+				echo "DESTROY_EKS_CLUSTER: ${env.DESTROY_EKS_CLUSTER}"
                 println (WORKSPACE)
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'ThingiMachingiGitHubCred', url: 'https://github.com/thingimachingi/Create-AWS-EKS-Cluster']])
                 withCredentials([[
@@ -31,7 +26,9 @@ pipeline {
                     // AWS Code
                     sh "aws sts get-caller-identity"
 					
-					
+					if (${env.DESTROY_EKS_CLUSTER} == 'Yes') {
+					    echo "Going to destroy EKS Cluster"
+					}
 					
 					input 'Want to destroy the EKS cluster2?'
 					//TODO: execute the below two steps only if the cluster already does not exist
