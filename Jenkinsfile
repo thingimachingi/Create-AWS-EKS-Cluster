@@ -27,9 +27,8 @@ pipeline {
                     sh "aws sts get-caller-identity"
 					
 					script {
-						if (${env.DESTROY_EKS_CLUSTER} == 'Yes') {
+						if (env.DESTROY_EKS_CLUSTER == 'Yes') {
 							echo "Going to destroy EKS Cluster"
-							
 						}
 					}
 					
