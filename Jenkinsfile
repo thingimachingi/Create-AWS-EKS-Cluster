@@ -18,17 +18,21 @@ pipeline {
                 println (WORKSPACE)
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'ThingiMachingiGitHubCred', url: 'https://github.com/thingimachingi/Create-AWS-EKS-Cluster']])
 				
-				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'DockerCred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-					//sh 'cf login some.awesome.url -u $USERNAME -p $PASSWORD'
-					sh 'kubectl create secret docker-registry dockercred --docker-server=https://index.docker.io/v1/ --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=mkrish2@gmail.com'
-				}
+                withCredentials([
+					[
+						$class: 'AmazonWebServicesCredentialsBinding',
+						credentialsId: "mkrish2-accessid-secret",
+						accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+						secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+					],
+					[
+						$class: 'UsernamePasswordMultiBinding', 
+						credentialsId:'DockerCred', 
+						usernameVariable: 'USERNAME', 
+						passwordVariable: 'PASSWORD'
+					]
 				
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: "mkrish2-accessid-secret",
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
+				]) {
 				
                     // AWS Code
                     //sh "aws sts get-caller-identity"
@@ -41,8 +45,10 @@ pipeline {
 							echo "Going to create EKS Cluster"
 							input 'Want to create the EKS Cluster?'
 							//TODO: execute the below two steps only if the cluster already does not exist
-							//sh "terraform init"
-							//sh "terraform apply -auto-approve"
+							sh "terraform init"
+							sh "terraform apply -auto-approve"
+							
+							sh 'kubectl create secret docker-registry dockercred --docker-server=https://index.docker.io/v1/ --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=mkrish2@gmail.com'
 							//TODO: add verify cluster steps. refer to https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
 						}
 					}
