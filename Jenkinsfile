@@ -47,7 +47,9 @@ pipeline {
 							//TODO: execute the below two steps only if the cluster already does not exist
 							sh "terraform init"
 							sh "terraform apply -auto-approve"
-							
+							//important to connect to the cluster and issue further commands
+							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
+							sh 'kubectl cluster-info'
 							sh 'kubectl create secret docker-registry dockercred --docker-server=https://index.docker.io/v1/ --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=mkrish2@gmail.com'
 							//TODO: add verify cluster steps. refer to https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
 						}
