@@ -21,4 +21,4 @@ spec:
         image: mkrish2/clover-logging:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8887
+        - containerPort: 8888
