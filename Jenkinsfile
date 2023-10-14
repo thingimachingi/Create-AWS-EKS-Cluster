@@ -57,6 +57,9 @@ pipeline {
 							sh 'kubectl cluster-info'
 							//sh 'kubectl apply -f clover-logging-deployment.yml'
 							//sh 'kubectl apply -f clover-logging-ingress.yml'
+							
+							sh "kubectl patch deployment <deployment-name> -p '{"spec":{"template":{"spec":{"containers":[{"name":"clover-logging","image":"mkrish2/clover-logging:latest"}]}}}'"
+							sh 'kubectl get deployment clover-logging-deployment'
 							sh 'kubectl get ingress'
 						}
 						else if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
