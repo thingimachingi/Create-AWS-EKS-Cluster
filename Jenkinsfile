@@ -22,6 +22,13 @@ pipeline {
 												  name: 'DeployCloverLogging')]
 				}
 
+				script {
+				  env.CREATE_INGRESS_CONTROLLER = input message: 'Want to create the Ingress Controller/ALB for EKS service',
+									 parameters: [string(defaultValue: 'No',
+												  description: 'Say Yes or No',
+												  name: 'CreateIngressController')]
+				}
+
                 println (WORKSPACE)
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'ThingiMachingiGitHubCred', url: 'https://github.com/thingimachingi/Create-AWS-EKS-Cluster']])
 				
@@ -45,7 +52,10 @@ pipeline {
                     //sh "aws sts get-caller-identity"
 					
 					script {
-						if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
+						if (env.CREATE_INGRESS_CONTROLLER== 'Yes') {
+							sh 'kubectl apply -f clover-logging-ingress.yml'
+						}
+						else if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
 							echo "Going to deploy clover-logging on EKS Cluster"
 							//important to connect to the cluster and issue further commands
 							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
