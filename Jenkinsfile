@@ -15,6 +15,13 @@ pipeline {
 												  name: 'DestroyEksCluster')]
 				}
 				echo "DESTROY_EKS_CLUSTER: ${env.DESTROY_EKS_CLUSTER}"
+				script {
+				  env.DEPLOY_CLOVER_LOGGING = input message: 'Want to deploy clover logging on the EKS cluster',
+									 parameters: [string(defaultValue: 'No',
+												  description: 'Say Yes or No',
+												  name: 'DeployCloverLogging')]
+				}
+
                 println (WORKSPACE)
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'ThingiMachingiGitHubCred', url: 'https://github.com/thingimachingi/Create-AWS-EKS-Cluster']])
 				
@@ -38,7 +45,22 @@ pipeline {
                     //sh "aws sts get-caller-identity"
 					
 					script {
-						if (env.DESTROY_EKS_CLUSTER == 'Yes') {
+						if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
+							echo "Going to deploy clover-logging on EKS Cluster"
+							//important to connect to the cluster and issue further commands
+							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
+							sh 'kubectl cluster-info'
+							sh 'kubectl create ns clover-dev'
+							sh 'kubectl create secret docker-registry dockerhub-cred --docker-server=https://index.docker.io/v1/ --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=mkrish2@gmail.com --namespace=clover-dev'
+							sh 'kubectl get secrets dockerhub-cred --namespace=clover-dev'
+							sh 'kubectl apply -f create-service-account.yml'
+							sh 'kubectl get sa clover-sa --namespace=clover-dev'
+							sh 'kubectl apply -f clover-logging-deployment.yml'
+							sh 'kubectl expose deployment clover-logging-deployment --namespace=clover-dev --type=LoadBalancer --name=clover-logging-service'
+							sh 'kubectl get service/clover-logging-service --namespace=clover-dev'
+							
+						}
+						else if (env.DESTROY_EKS_CLUSTER == 'Yes') {
 							echo "Going to destroy EKS Cluster"
 							sh "terraform destroy -auto-approve"
 						} else {

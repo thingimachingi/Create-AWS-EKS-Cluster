@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clover-logging-deployment
+  namespace: dev
+  labels:
+    app: clover-logging
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: clover-logging
+  template:
+    metadata:
+      labels:
+        app: clover-logging
+    spec:
+      serviceAccountName: dev-sa
+      containers:
+      - name: clover-logging
+        image: mkrish2/clover-logging:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8887
