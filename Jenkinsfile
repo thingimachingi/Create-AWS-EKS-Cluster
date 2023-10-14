@@ -62,6 +62,7 @@ pipeline {
 						}
 						else if (env.DESTROY_EKS_CLUSTER == 'Yes') {
 							echo "Going to destroy EKS Cluster"
+							sh 'kubectl -n clover-dev delete pod,svc --all'
 							sh "terraform destroy -auto-approve"
 						} else {
 							echo "Going to create EKS Cluster"
