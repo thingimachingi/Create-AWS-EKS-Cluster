@@ -53,6 +53,9 @@ pipeline {
 					
 					script {
 						if (env.CREATE_INGRESS_CONTROLLER== 'Yes') {
+							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
+							sh 'kubectl cluster-info'
+							sh 'kubectl apply -f clover-logging-deployment.yml'
 							sh 'kubectl apply -f clover-logging-ingress.yml'
 						}
 						else if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
