@@ -58,7 +58,7 @@ pipeline {
 							//sh 'kubectl apply -f clover-logging-deployment.yml'
 							//sh 'kubectl apply -f clover-logging-ingress.yml'
 							
-							sh "kubectl patch deployment clover-logging-deployment -p '{"spec":{"template":{"spec":{"containers":[{"name":"clover-logging","image":"mkrish2/clover-logging\:latest"}]}}}'"
+							sh "kubectl patch deployment clover-logging-deployment -p '{"spec":{"template":{"spec":{"containers":[{"name":"clover-logging","image":"mkrish2/clover-logging"}]}}}'"
 							sh 'kubectl get deployment clover-logging-deployment'
 							sh 'kubectl get ingress'
 						}
