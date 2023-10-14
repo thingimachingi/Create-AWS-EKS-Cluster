@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: clover-logging-deployment
-  namespace: dev
+  namespace: clover-dev
   labels:
     app: clover-logging
 spec:
@@ -15,7 +15,7 @@ spec:
       labels:
         app: clover-logging
     spec:
-      serviceAccountName: dev-sa
+      serviceAccountName: clover-sa
       containers:
       - name: clover-logging
         image: mkrish2/clover-logging:latest
