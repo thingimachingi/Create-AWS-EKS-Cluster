@@ -58,7 +58,7 @@ pipeline {
 							sh 'kubectl apply -f clover-logging-deployment.yml'
 							sh 'kubectl expose deployment clover-logging-deployment --namespace=clover-dev --type=LoadBalancer --name=clover-logging-service'
 							sh 'kubectl get service/clover-logging-service --namespace=clover-dev'
-							
+							sh 'kubectl get services -n clover-dev -o wide'
 						}
 						else if (env.DESTROY_EKS_CLUSTER == 'Yes') {
 							echo "Going to destroy EKS Cluster"
