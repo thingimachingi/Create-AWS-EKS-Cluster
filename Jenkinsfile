@@ -59,7 +59,7 @@ pipeline {
 							//sh 'kubectl apply -f clover-logging-ingress.yml'
 							
 							sh 'kubectl patch deployment clover-logging-deployment -n clover-dev -p \'{"spec":{"template":{"spec":{"containers":[{"name":"clover-logging","image":"mkrish2/clover-logging"}]}}}}\''
-							sh 'kubectl get deployment clover-logging-deployment'
+							sh 'kubectl get deployment -n clover-dev clover-logging-deployment'
 							sh 'kubectl get ingress'
 						}
 						else if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
