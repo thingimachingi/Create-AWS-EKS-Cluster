@@ -57,6 +57,7 @@ pipeline {
 							sh 'kubectl cluster-info'
 							sh 'kubectl apply -f clover-logging-deployment.yml'
 							sh 'kubectl apply -f clover-logging-ingress.yml'
+							sh 'kubectl get ingress'
 						}
 						else if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
 							echo "Going to deploy clover-logging on EKS Cluster"
