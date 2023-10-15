@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 resource "kubernetes_namespace" "nginx_ingress" {
   metadata {
     name = "clover-dev"
