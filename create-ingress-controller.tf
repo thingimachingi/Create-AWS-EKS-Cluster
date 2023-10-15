@@ -1,5 +1,5 @@
-provider "kubernetes" {
-  config_path = "${path.module}/kubeconfig.yaml"
+provider "aws" {
+  region = var.region
 }
 
 resource "kubernetes_namespace" "nginx_ingress" {
