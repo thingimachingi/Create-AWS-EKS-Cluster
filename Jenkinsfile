@@ -55,7 +55,7 @@ pipeline {
 						if (env.CREATE_INGRESS_CONTROLLER== 'Yes') {
 							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
 							sh 'kubectl cluster-info'
-							sh 'kubectl create ns clover-dev'
+							//sh 'kubectl create ns clover-dev'
 							echo "Created namespace clover-dev in EKS Cluster"
 							sh "terraform init"
 							sh 'kubectl apply -f create-ingress-controller.yml'
