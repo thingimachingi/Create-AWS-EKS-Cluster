@@ -58,7 +58,7 @@ pipeline {
 							//sh 'kubectl create ns clover-dev'
 							echo "Created namespace clover-dev in EKS Cluster"
 							sh "terraform init"
-							sh 'kubectl apply -f create-ingress-controller.yml'
+							sh "terraform apply -auto-approve"
 	
 							//sh 'kubectl apply -f clover-logging-deployment.yml'
 							//sh 'kubectl apply -f clover-logging-ingress.yml'
