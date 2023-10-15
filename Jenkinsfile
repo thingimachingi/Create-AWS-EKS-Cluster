@@ -78,8 +78,12 @@ pipeline {
 							sh 'kubectl get services -n clover-dev -o wide'
 						}
 						else if (env.DESTROY_EKS_CLUSTER == 'Yes') {
+							//important to connect to the cluster and issue further commands
+							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
+							sh 'kubectl cluster-info'
+						
 							echo "Going to destroy EKS Cluster"
-							//sh 'kubectl -n clover-dev delete pod,svc --all'
+							sh 'kubectl -n clover-dev delete pod,svc --all'
 							sh "terraform destroy -auto-approve"
 						} else {
 							echo "Going to create EKS Cluster"
