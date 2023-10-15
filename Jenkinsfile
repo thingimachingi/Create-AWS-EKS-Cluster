@@ -55,12 +55,18 @@ pipeline {
 						if (env.CREATE_INGRESS_CONTROLLER== 'Yes') {
 							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
 							sh 'kubectl cluster-info'
+							sh 'kubectl create ns clover-dev'
+							echo "Created namespace clover-dev in EKS Cluster"
+							sh "terraform init"
+							sh 'kubectl apply -f create-ingress-controller.yml -auto-approve'
+	
 							//sh 'kubectl apply -f clover-logging-deployment.yml'
 							//sh 'kubectl apply -f clover-logging-ingress.yml'
 							
 							//sh 'kubectl patch deployment clover-logging-deployment -n clover-dev -p \'{"spec":{"template":{"spec":{"containers":[{"name":"clover-logging","image":"mkrish2/clover-logging:healthcheck"}]}}}}\''
 							sh 'kubectl get deployment -n clover-dev clover-logging-deployment'
-							sh 'kubectl get ingress'
+							sh 'kubectl get deployment -n clover-dev kubernetes_deployment'
+							
 						}
 						else if (env.DEPLOY_CLOVER_LOGGING == 'Yes') {
 							echo "Going to deploy clover-logging on EKS Cluster"
@@ -94,6 +100,8 @@ pipeline {
 							//important to connect to the cluster and issue further commands
 							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
 							sh 'kubectl cluster-info'
+							sh 'kubectl create ns clover-dev'
+							echo "Created namespace clover-dev in EKS Cluster"
 							//TODO: add verify cluster steps. refer to https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
 						}
 					}
