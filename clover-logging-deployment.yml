@@ -18,7 +18,7 @@ spec:
       serviceAccountName: clover-sa
       containers:
       - name: clover-logging
-        image: mkrish2/clover-logging:latest
+        image: mkrish2/clover-logging:healthcheck
         imagePullPolicy: Always
         ports:
-        - containerPort: 8888
+        - containerPort: 80

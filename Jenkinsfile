@@ -58,7 +58,7 @@ pipeline {
 							//sh 'kubectl apply -f clover-logging-deployment.yml'
 							//sh 'kubectl apply -f clover-logging-ingress.yml'
 							
-							sh 'kubectl patch deployment clover-logging-deployment -n clover-dev -p \'{"spec":{"template":{"spec":{"containers":[{"name":"clover-logging","image":"mkrish2/clover-logging"}]}}}}\''
+							//sh 'kubectl patch deployment clover-logging-deployment -n clover-dev -p \'{"spec":{"template":{"spec":{"containers":[{"name":"clover-logging","image":"mkrish2/clover-logging:healthcheck"}]}}}}\''
 							sh 'kubectl get deployment -n clover-dev clover-logging-deployment'
 							sh 'kubectl get ingress'
 						}
@@ -94,7 +94,6 @@ pipeline {
 							//important to connect to the cluster and issue further commands
 							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
 							sh 'kubectl cluster-info'
-							sh 'kubectl create secret docker-registry dockercred --docker-server=https://index.docker.io/v1/ --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=mkrish2@gmail.com'
 							//TODO: add verify cluster steps. refer to https://developer.hashicorp.com/terraform/tutorials/kubernetes/eks
 						}
 					}
