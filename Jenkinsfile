@@ -73,7 +73,7 @@ pipeline {
 							//important to connect to the cluster and issue further commands
 							sh 'aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)'
 							sh 'kubectl cluster-info'
-							//sh 'kubectl create ns clover-dev'
+							sh 'kubectl create ns clover-dev'
 							sh 'kubectl create secret docker-registry dockerhub-cred --docker-server=https://index.docker.io/v1/ --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=mkrish2@gmail.com --namespace=clover-dev'
 							sh 'kubectl get secrets dockerhub-cred --namespace=clover-dev'
 							sh 'kubectl apply -f create-service-account.yml'
